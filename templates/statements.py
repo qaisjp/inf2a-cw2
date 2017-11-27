@@ -30,7 +30,24 @@ class Lexicon:
 
 class FactBase:
     """stores unary and binary relational facts"""
-    # add code here
+
+    def __init__(self):
+        self.unary_facts = defaultdict(list)
+        self.binary_facts = defaultdict(list)
+
+    def addUnary(self, pred, e1):
+        # predicate, entity1??
+        self.unary_facts[pred].append(e1)
+
+    def addBinary(self, pred, e1, e2):
+        # predicate, entity1??
+        self.binary_facts[pred].append((e1, e2))
+
+    def queryBinary(self, pred, e1, e2):
+        return (e1, e2) in self.binary_facts[pred]
+
+    def queryUnary(self, pred, e1):
+        return e1 in self.unary_facts[pred]
 
 import re
 from nltk.corpus import brown 
