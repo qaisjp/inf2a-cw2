@@ -14,9 +14,19 @@ def add(lst,item):
     if (item not in lst):
         lst.insert(len(lst),item)
 
+from collections import defaultdict
+
 class Lexicon:
     """stores known word stems of various part-of-speech categories"""
-    # add code here
+
+    def __init__(self):
+        self.cat_stems = defaultdict(set)
+
+    def add(self, stem, cat):
+        self.cat_stems[cat].add(stem)
+
+    def getAll(self, cat):
+        return list(self.cat_stems[cat])
 
 class FactBase:
     """stores unary and binary relational facts"""
