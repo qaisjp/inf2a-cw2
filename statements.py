@@ -55,12 +55,10 @@ from nltk.corpus import brown
 # performance upgrade!
 brown_tagged_words = set(brown.tagged_words())
 
-def verb_stem(s):
-    """extracts the stem from the 3sg form of a verb, or returns empty string"""
+def threes_stem(verb):
     global verb_stem_stream
     verb_stem_stream = -1
 
-    verb = s # did not want to change the signature of verb_stem
     stem = ""
 
     # 8. X"es" -> X"e", as long as `X` does not end with one of: i, o, s, x, z, ch, sh
@@ -103,6 +101,17 @@ def verb_stem(s):
     elif verb.endswith("s") and not verb[:-1].endswith(("s", "x", "y", "z", "ch", "sh", "a", "e", "i", "o", "u")):
         verb_stem_stream = 1
         stem = verb[:-1]
+
+    return stem
+
+def verb_stem(s):
+    """extracts the stem from the 3sg form of a verb, or returns empty string"""
+
+    verb = s # did not want to change the signature of verb_stem
+    stem = threes_stem(verb)
+
+    if stem == "have":
+        return stem
 
     # verb_tagged = (verb, "VBZ") in brown.tagged_words()
     # stem_tagged = (stem, "VB") in brown.tagged_words()
