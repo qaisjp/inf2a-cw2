@@ -52,55 +52,64 @@ class FactBase:
 import re
 from nltk.corpus import brown 
 
+# performance upgrade!
+brown_tagged_words = set(brown.tagged_words())
+
 def verb_stem(s):
     """extracts the stem from the 3sg form of a verb, or returns empty string"""
     global verb_stem_stream
     verb_stem_stream = -1
 
     verb = s # did not want to change the signature of verb_stem
+    stem = ""
 
     # 8. X"es" -> X"e", as long as `X` does not end with one of: i, o, s, x, z, ch, sh
     if verb.endswith("es") and not verb[:-2].endswith(("i", "o", "s", "x", "z", "ch", "sh")):
         verb_stem_stream = 8
-        return verb[:-1]
+        stem = verb[:-1]
 
     # 7. "has" -> "have"
-    if verb == "has":
+    elif verb == "has":
         verb_stem_stream = 7
-        return "have"
+        return "have" # no checking to be done here
 
     # 6. verb ends with "ses" or "zes", but not "sses" or "zzes"
-    if verb.endswith(("ses", "zes")) and not verb.endswith(("sses", "zzes")):
+    elif verb.endswith(("ses", "zes")) and not verb.endswith(("sses", "zzes")):
         verb_stem_stream = 6
-        return verb[:-1]
+        stem = verb[:-1]
 
     # 5. X"es" -> X, as long as `X` does not end with one of: o,x,ch,sh,ss,zz
-    if verb.endswith("es") and verb[:-2].endswith(("o", "x", "ch", "sh", "ss", "zz")):
+    elif verb.endswith("es") and verb[:-2].endswith(("o", "x", "ch", "sh", "ss", "zz")):
         verb_stem_stream = 5
-        return verb[:-2]
+        stem = verb[:-2]
 
     # 4. X"ies" -> X"ie", where CHARACTER (not string) X is not a vowel
     #    (p.s. I know character is not a type in python)
-    if len(verb) == 4 and verb.endswith("ies") and verb[0] not in "aeiou":
+    elif len(verb) == 4 and verb.endswith("ies") and verb[0] not in "aeiou":
         verb_stem_stream = 4
-        return verb[:-1]
+        stem = verb[:-1]
 
     # 3. X"ies" -> X"y", where len(verb) >= 5, and X does not end with a vowel; snip off ies, append y
-    if len(verb) >= 5 and verb.endswith("ies") and verb[-4] not in "aeiou":
+    elif len(verb) >= 5 and verb.endswith("ies") and verb[-4] not in "aeiou":
         verb_stem_stream = 3
-        return verb[:-3] + "y"
+        stem = verb[:-3] + "y"
 
     # 2. X"ys" -> X"y", where X ends with a vowel; snip off s [ADDED PROTECTION FROM IndexError]
-    if len(verb) >= 3 and verb.endswith("ys") and verb[-3] in "aeiou":
+    elif len(verb) >= 3 and verb.endswith("ys") and verb[-3] in "aeiou":
         verb_stem_stream = 2
-        return verb[:-1]
+        stem = verb[:-1]
 
     # 1. X"s" does not end with s,x,y,z,ch,sh, and X does not end with a vowel; snip off s
-    if verb.endswith("s") and not verb[:-1].endswith(("s", "x", "y", "z", "ch", "sh", "a", "e", "i", "o", "u")):
+    elif verb.endswith("s") and not verb[:-1].endswith(("s", "x", "y", "z", "ch", "sh", "a", "e", "i", "o", "u")):
         verb_stem_stream = 1
-        return verb[:-1]
+        stem = verb[:-1]
 
-    return ""
+    # verb_tagged = (verb, "VBZ") in brown.tagged_words()
+    # stem_tagged = (stem, "VB") in brown.tagged_words()
+    if (verb, "VBZ") not in brown_tagged_words and (stem, "VB") not in brown_tagged_words:
+        return ""
+
+    return stem
 
 def get_verb_stem_stream():
     return verb_stem_stream
