@@ -1,0 +1,15 @@
+# Improvement 1
+
+For some reason `Qais is not a frog.` is supported (says `OK.`), yet when you query for
+`Who is not a frog?` it fails. One might find it useful to handle `not` and other negatory forms, like `isn't`.
+
+This is especially confusing when you can say `Qais is a frog.` and then `Qais is not a frog.`. When you ask `Who is a frog?` it will then proceed to tell you that `Qais` is a frog.
+
+This should be fairly simple to implement as it would just require an extension of the existing rules (and grammar).
+
+# Improvement 2
+
+When trying out sentences mentioned throughout the coursework specification (like, `Who is a duck?`), I am met with `Ehh?`. This is because the word `duck` is not in the lexicon. It would be useful to simply say `No one` in this case.
+
+This may prove difficult as we do not know beforehand which phrases match the grammar correctly (to then extract the word), but it would be trivial to determine whether a particular word is a noun.
+
