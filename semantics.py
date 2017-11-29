@@ -28,19 +28,15 @@ def sem(tr):
     if (tr.label() == 'P'):
         return tr[0][0]
     elif (tr.label() in "AIN"):
-        # return '(\\x.' + tr[0][0] + '(x))'  # \\ is escape sequence for \
         return x("{}(x)", tr[0][0])
 
     elif tr.label() == "T":  # add code here
         return x(y("{}(x,y)", tr[0][0]))
-        # return '(\\x.\\y.' + tr[0][0] + '(x,y))'
     # non terminals here, match by rule
     elif rule == "S -> WHO QP QM":
-        # return '(\\x.' + sem(tr[1]) + '(x))'
         return x("{}(x)", sem(tr[1]))
     elif rule == "S -> WHICH Nom QP QM":
         return x(and_(sem_x(1), sem_x(2)))
-        # return '(\\x.(' + sem(tr[1]) + '(x) & ' + sem(tr[2]) + '(x)))'
     elif rule in ["QP -> VP", "VP -> I", "NP -> Nom", "Nom -> AN", "AN -> N"]:
         return sem(tr[0]) # the first item can handle it, no need to lambda for no reason
     elif rule == "QP -> DO NP T":
@@ -52,13 +48,9 @@ def sem(tr):
         return sem(tr[1])
     elif rule == "VP -> VP AND VP":
         return x(and_(sem_x(0), sem_x(2)))
-        # return '(\\x. (' + sem(tr[0]) + '(x) & ' + sem(tr[2]) + '(x)))'
     elif (rule == 'NP -> P'):
         return '(\\x.(x = ' + sem(tr[0]) + '))' # provided
     elif rule in ['AN -> A AN', "Nom -> AN Rel"]:
-        # first rule in the above list was provided, so this lambda below
-        # is the original
-        # return '(\\x.(' + sem(tr[0]) + '(x) & ' + sem(tr[1]) + '(x)))'
         return x(and_(sem_x(0), sem_x(1)))
     elif rule == "Rel -> NP T":
         # ALTERNATIVELY MAY BE THE RULE RIGHT ABOVE ME.
