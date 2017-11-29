@@ -13,19 +13,58 @@
 from agreement import *
 
 def sem(tr):
+    def x(strf, *args):
+        return '(\\x. {})'.format(strf.format(*args))
+    def y(strf, *args):
+        return '(\\y. {})'.format(strf.format(*args))
+    def and_(a, b):
+        return '{} & {}'.format(a, b)
+    def sem_x(n):
+        return sem(tr[n]) + "(x)"
+
     """translates a syntax tree into a logical lambda expression (in string form)"""
     rule = top_level_rule(tr)
+    # terminals, so use tr.label()
     if (tr.label() == 'P'):
         return tr[0][0]
-    elif (tr.label() == 'N'):
-        return '(\\x.' + tr[0][0] + '(x))'  # \\ is escape sequence for \
-    elif  # add code here
-    
-    elif (rule == 'AN -> A AN'):
-        return '(\\x.(' + sem(tr[0]) + '(x) & ' + sem(tr[1]) + '(x)))'
+    elif (tr.label() in "AIN"):
+        # return '(\\x.' + tr[0][0] + '(x))'  # \\ is escape sequence for \
+        return x("{}(x)", tr[0][0])
+
+    elif tr.label() == "T":  # add code here
+        return x(y("{}(x,y)", tr[0][0]))
+        # return '(\\x.\\y.' + tr[0][0] + '(x,y))'
+    # non terminals here, match by rule
+    elif rule == "S -> WHO QP QM":
+        # return '(\\x.' + sem(tr[1]) + '(x))'
+        return x("{}(x)", sem(tr[1]))
+    elif rule == "S -> WHICH Nom QP QM":
+        return x(and_(sem_x(1), sem_x(2)))
+        # return '(\\x.(' + sem(tr[1]) + '(x) & ' + sem(tr[2]) + '(x)))'
+    elif rule in ["QP -> VP", "VP -> I", "NP -> Nom", "Nom -> AN", "AN -> N"]:
+        return sem(tr[0]) # the first item can handle it, no need to lambda for no reason
+    elif rule == "QP -> DO NP T":
+        return '(\\x. (exists y. ((' + sem(tr[1]) + ' (y)) & (' + sem(tr[2]) + '(y))(x))))'
+    elif rule == "VP -> T NP":
+        return '(\\x. (exists y. (' + sem(tr[0]) + '(x,y) & ' + sem(tr[1]) + '(y))))'
+    elif rule in ["VP -> BE A", "VP -> BE NP", "NP -> AR Nom", "Rel -> WHO VP"]:
+        # sem(second item) as it can handle itself lower down
+        return sem(tr[1])
+    elif rule == "VP -> VP AND VP":
+        return x(and_(sem_x(0), sem_x(2)))
+        # return '(\\x. (' + sem(tr[0]) + '(x) & ' + sem(tr[2]) + '(x)))'
     elif (rule == 'NP -> P'):
-        return '(\\x.(x = ' + sem(tr[0]) + '))'
-    elif  # add more code here
+        return '(\\x.(x = ' + sem(tr[0]) + '))' # provided
+    elif rule in ['AN -> A AN', "Nom -> AN Rel"]:
+        # first rule in the above list was provided, so this lambda below
+        # is the original
+        # return '(\\x.(' + sem(tr[0]) + '(x) & ' + sem(tr[1]) + '(x)))'
+        return x(and_(sem_x(0), sem_x(1)))
+    elif rule == "Rel -> NP T":
+        # ALTERNATIVELY MAY BE THE RULE RIGHT ABOVE ME.
+        return '(\\x. (exists y. (' + sem(tr[0]) + '(y) & ' + sem(tr[1]) + '(y,x))))'
+    else:
+        raise Exception("Unhandled rule " + rule + " with label " + tr.label())
 
 
 # Logic parser for lambda expressions
@@ -120,7 +159,7 @@ def dialogue():
                     tr = restore_words (trees[0],wds)
                     lam_exp = lp.parse(sem(tr))
                     L = lam_exp.simplify()
-                    # print L  # useful for debugging
+                    print L  # useful for debugging
                     entities = lx.getAll('P')
                     results = find_all_solutions (L,entities,fb)
                     if (results == []):
