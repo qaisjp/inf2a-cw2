@@ -1,0 +1,26 @@
+$$      OK.
+$$      OK.
+$$      OK.
+$$      OK.
+$$      OK.
+$$      OK.
+$$      OK.
+$$      OK.
+$$      OK.
+$$      OK.
+$$      OK.
+$$      OK.
+$$      OK.
+$$      OK.
+$$      OK.
+$$      OK.
+$$      OK.
+$$      C  M
+$$      C  M
+$$      M  B  
+$$      J  M  C  B  
+$$      J  M  C  B  
+$$      M  C  B  
+$$      J  M  
+$$      Ambiguous!
+$$      M  B

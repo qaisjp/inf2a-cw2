@@ -1,0 +1,40 @@
+John is a duck.
+John is orange.
+John runs.
+John swims.
+John flies.
+John likes Mary.
+John likes A.
+John likes Mona.
+Mona is a frog.
+Mona is purple.
+Mona likes Susan.
+Susan is a fish.
+Susan is golden.
+Susan hates John.
+Mary is a duck.
+Mary flies.
+Mary likes A.
+M is a duck.
+M flies.
+C is a duck.
+A is a duck.
+A flies.
+A is orange.
+A likes John.
+ 
+Who is a duck?
+Who likes a duck who flies?
+Who flies?
+Who likes Mary?
+Who likes ducks?
+Who likes orange ducks?
+Who likes a duck?
+Who likes orange ducks John likes?
+Who likes orange ducks who fly?
+Who is orange?
+Who is John?
+Who likes John and is orange?
+Which duck flies?
+Which duck who flies is orange?
+Which orange duck who flies and swims likes a purple frog who likes a golden fish who hates an orange duck who runs?

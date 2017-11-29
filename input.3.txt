@@ -1,0 +1,26 @@
+J is old.
+M is old.
+C is old.
+B is old.
+M drinks W.
+M is lazy.
+M sleeps.
+J sleeps.
+M is a duck.
+J drinks W.
+J is lazy.
+C is lazy.
+C sleeps.
+B drinks W.
+B is lazy.
+B is a duck.
+C is a duck.
+Which duck sleeps?
+Which old duck sleeps?
+Which old duck drinks W?
+Who is lazy?
+Who is old?
+Who is a duck?
+Who drinks W and sleeps?
+Who is old and sleeps and drinks W?
+Who is old and is a duck who drinks W?

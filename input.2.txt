@@ -1,0 +1,6 @@
+C has D.
+Who does C have?
+Who does D have?
+Who has D?
+Who has C?
+
