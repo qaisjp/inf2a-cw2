@@ -159,7 +159,7 @@ def dialogue():
                     tr = restore_words (trees[0],wds)
                     lam_exp = lp.parse(sem(tr))
                     L = lam_exp.simplify()
-                    print L  # useful for debugging
+                    # print L  # useful for debugging
                     entities = lx.getAll('P')
                     results = find_all_solutions (L,entities,fb)
                     if (results == []):
