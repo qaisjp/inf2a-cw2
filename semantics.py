@@ -56,7 +56,7 @@ def sem(tr):
     elif rule == "VP -> VP AND VP":
         return x(and_(sem_x(0), sem_x(2)))
     elif (rule == 'NP -> P'):
-        return '(\\x.(x = ' + sem(tr[0]) + '))' # provided
+        return x('(x = ' + sem(tr[0]) + ')') # provided
     elif rule in ['AN -> A AN', "Nom -> AN Rel"]:
         return x(and_(sem_x(0), sem_x(1)))
     elif rule == "Rel -> NP T":
