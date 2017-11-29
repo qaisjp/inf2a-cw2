@@ -36,42 +36,30 @@ def sem(tr):
     if (tr.label() == 'P'):
         return tr[0][0]
     elif (tr.label() in "AIN"):
-        # return '(\\x.' + tr[0][0] + '(x))'  # \\ is escape sequence for \
         return x("{}(x)", tr[0][0])
-
     elif tr.label() == "T":  # add code here
-        # return '(\\x.\\y.' + tr[0][0] + '(x,y))'
         return x(y("{}(x,y)", tr[0][0]))
     # non terminals here, match by rule
     elif rule == "S -> WHO QP QM":
-        # return '(\\x.' + sem(tr[1]) + '(x))'
         return x("{}(x)", sem(tr[1]))
     elif rule == "S -> WHICH Nom QP QM":
-        # return '(\\x.(' + sem(tr[1]) + '(x) & ' + sem(tr[2]) + '(x)))'
         return x(and_(sem_x(1), sem_x(2)))
     elif rule in ["QP -> VP", "VP -> I", "NP -> Nom", "Nom -> AN", "AN -> N"]:
         return sem(tr[0]) # the first item can handle it, no need to lambda for no reason
     elif rule == "QP -> DO NP T":
-        # return x('exists y. ((' + sem(tr[1]) + ' (y)) & (' + sem(tr[2]) + '(y,x)))')
         return x(exists_y(and_(sem_y(1), sem_yx(2))))
     elif rule == "VP -> T NP":
-        # return x('exists y. (' + sem(tr[0]) + '(x,y) & ' + sem(tr[1]) + '(y))')
         return x(exists_y(and_(sem_xy(0), sem_y(1))))
     elif rule in ["VP -> BE A", "VP -> BE NP", "NP -> AR Nom", "Rel -> WHO VP"]:
         # sem(second item) as it can handle itself lower down
         return sem(tr[1])
     elif rule == "VP -> VP AND VP":
-        # return '(\\x. (' + sem(tr[0]) + '(x) & ' + sem(tr[2]) + '(x)))'
         return x(and_(sem_x(0), sem_x(2)))
     elif (rule == 'NP -> P'):
         return '(\\x.(x = ' + sem(tr[0]) + '))' # provided
     elif rule in ['AN -> A AN', "Nom -> AN Rel"]:
-        # first rule in the above list was provided, so this lambda below
-        # is the original
-        # return '(\\x.(' + sem(tr[0]) + '(x) & ' + sem(tr[1]) + '(x)))'
         return x(and_(sem_x(0), sem_x(1)))
     elif rule == "Rel -> NP T":
-        # return '(\\x. exists y. (' + sem(tr[0]) + '(y) & ' + sem(tr[1]) + '(y,x)))'
         return x(exists_y(and_(sem_y(0), sem_yx(0))))
     else:
         raise Exception("Unhandled rule " + rule + " with label " + tr.label())
